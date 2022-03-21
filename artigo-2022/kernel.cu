@@ -22,11 +22,11 @@
 #define blocks 200
 #define threads 32
 #define gpu 1
-#define arq 6		//número de arquivo para salvar
+#define arq 1		//número de arquivo para salvar
 
 #define kMax 200000
 #define passoVelocidade 0.195
-#define pontos 40
+#define pontos 75
 #define passo 2
 
 #define varr 'f'
@@ -41,7 +41,7 @@
 //  Gera arquivos com cada velocidade na pasta dadosV
 
 const char aumentando = 'd';
-const double Diodo[] = { (2 * Pi) * 0.6e6, (2 * Pi) * 1.2e6, (2 * Pi) * 3e6, (2 * Pi) * 6e6, (2 * Pi) * 12e6, (2 * Pi) * 24e6 };
+const double Diodo[] = { (2 * Pi) * 12e6, (2 * Pi) * 1.2e6, (2 * Pi) * 3e6, (2 * Pi) * 6e6, (2 * Pi) * 12e6, (2 * Pi) * 24e6 };
 const double Femto[] = { (2 * Pi) * 0.6e6, (2 * Pi) * 1.2e6, (2 * Pi) * 3e6, (2 * Pi) * 6e6, (2 * Pi) * 12e6, (2 * Pi) * 24e6 };
 __constant__ double Ai = 1;
 __constant__ double Aa = 0;    //em rad/s
@@ -60,8 +60,6 @@ __constant__ double deltai = 0;
 #define gama22 (2*Pi)*6.06e6
 #define gama33 (2*Pi)*660e3
 #define gama44 (2*Pi)*1.3e6
-
-__constant__ double decFora = 2 * Pi * 2e6;
 
 __constant__ double kd = (2 * Pi) / 780e-9;
 __constant__ double kf = (2 * Pi) / 776e-9 * (sinal);
@@ -112,7 +110,7 @@ __device__ double f(double a11, double a22, double a33, double a44, double a12, 
 	double a43, double b43, double a13, double b13, double a24, double b24, double deltad, double deltaf, double deltaa, int j,
 	double v, double Ad, double Af)  //sistema de 4 níveis
 {
-	/*a11*/ if (j == 1)  return 2 * Ad * b12 - 2 * Bd * a12 + 2 * Aa * b14 - 2 * Ba * a14 + (gama22-decFora) * a22 + gama44 * a44;				   //a11
+	/*a11*/ if (j == 1)  return 2 * Ad * b12 - 2 * Bd * a12 + 2 * Aa * b14 - 2 * Ba * a14 + gama22 * a22 + gama44 * a44;				   //a11
 	/*a22*/ if (j == 2)  return -2 * Ad * b12 + 2 * Bd * a12 + 2 * Af * b23 - 2 * Bf * a23 - gama22 * a22 + (2.05 - 0.35 * niveis) * gama33 * a33;        //a22
 	/*a33*/ if (j == 3)  return -2 * Ai * b43 + 2 * Bi * a43 - 2 * Af * b23 + 2 * Bf * a23 - gama33 * a33;									   //a33
 	/*a44*/ if (j == 4)  return 2 * Ai * b43 - 2 * Bi * a43 - 2 * Aa * b14 + 2 * Ba * a14 - gama44 * a44 + 0.35 * (niveis - 3) * gama33 * a33;		   //a44
@@ -244,14 +242,12 @@ int main()
 
 		if (aumentando == 'd')
 		{
-			Ad[0] = Diodo[kp];
-			Af[0] = Femto[0];
+			Ad[0] = Diodo[kp]; Af[0] = Femto[0];
 		}
 
 		if (aumentando == 'f')
 		{
-			Ad[0] = Diodo[0];
-			Af[0] = Femto[kp];
+			Ad[0] = Diodo[0]; Af[0] = Femto[kp];
 		}
 
 		if (h_var == 'd')
