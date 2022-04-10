@@ -19,19 +19,19 @@
 
 #define Pi 3.141592653589793
 
-#define blocks 1
-#define threads 1
-#define gpu 1
-#define arq 1		//número de arquivo para salvar
+#define blocks 200
+#define threads 32
+#define gpu 3
+#define arq 6		//número de arquivo para salvar
 
 #define kMax 200000
 #define passoVelocidade 0.195
-#define pontos 75
-#define passo 2
+#define pontos 25
+#define passo 3
 
-#define varr 'd'
+#define varr 'f'
 //  d/f (diodo ou femto varrendo)
-#define dopp 'n'
+#define dopp 's'
 //  s/n (com doppler = sim ou não)
 #define sinal 1
 //  1 --> copropagante , -1 --> contrapropagante
@@ -41,7 +41,7 @@
 //  Gera arquivos com cada velocidade na pasta dadosV
 
 const char aumentando = 'd';
-const double Diodo[] = { (2 * Pi) * 12e6, (2 * Pi) * 1.2e6, (2 * Pi) * 3e6, (2 * Pi) * 6e6, (2 * Pi) * 12e6, (2 * Pi) * 24e6 };
+const double Diodo[] = { (2 * Pi) * 15e6, (2 * Pi) * 20e6, (2 * Pi) * 25e6, (2 * Pi) * 30e6, (2 * Pi) * 40e6, (2 * Pi) * 50e6 };
 const double Femto[] = { (2 * Pi) * 0.6e6, (2 * Pi) * 1.2e6, (2 * Pi) * 3e6, (2 * Pi) * 6e6, (2 * Pi) * 12e6, (2 * Pi) * 24e6 };
 __constant__ double Ai = 1;
 __constant__ double Aa = 0;    //em rad/s
